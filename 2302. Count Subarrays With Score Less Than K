@@ -1,0 +1,28 @@
+class Solution {
+    public long countSubarrays(int[] nums, long k) {
+        int n = nums.length;
+        long[] prefixSum = new long[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+        
+        long res = 0;
+        int left = 0;
+        for (int right = 0; right < n; right++) {
+            long sum = prefixSum[right + 1] - prefixSum[left];
+            long len = right - left + 1;
+            long score = sum * len;
+            
+            while (score >= k && left <= right) {
+                left++;
+                sum = prefixSum[right + 1] - prefixSum[left];
+                len = right - left + 1;
+                score = sum * len;
+            }
+            
+            res += right - left + 1;
+        }
+        
+        return res;
+    }
+}
