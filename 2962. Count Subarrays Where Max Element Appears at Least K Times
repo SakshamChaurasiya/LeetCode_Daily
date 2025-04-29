@@ -1,0 +1,30 @@
+class Solution {
+    public long countSubarrays(int[] nums, int k) {
+        int maxElement = Integer.MIN_VALUE;
+        for (int num : nums) {
+            if (num > maxElement) {
+                maxElement = num;
+            }
+        }
+        
+        long result = 0;
+        int left = 0;
+        int count = 0;
+        
+        for (int right = 0; right < nums.length; right++) {
+            if (nums[right] == maxElement) {
+                count++;
+            }
+            
+            while (count >= k) {
+                result += nums.length - right;
+                if (nums[left] == maxElement) {
+                    count--;
+                }
+                left++;
+            }
+        }
+        
+        return result;
+    }
+}
