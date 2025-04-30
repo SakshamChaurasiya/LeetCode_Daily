@@ -1,0 +1,30 @@
+class Solution {
+    public int findNumbers(int[] nums) {
+        int count = 0;
+        for (int num : nums) {
+            if (hasEvenDigits(num)) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    private boolean hasEvenDigits(int num) {
+        // Handle negative numbers by taking absolute value
+        num = Math.abs(num);
+        
+        // Special case for 0 (but 0 has 1 digit which is odd, so it won't be counted)
+        if (num == 0) {
+            return false;
+        }
+        
+        // Count the digits
+        int digitCount = 0;
+        while (num > 0) {
+            digitCount++;
+            num /= 10;
+        }
+        
+        return digitCount % 2 == 0;
+    }
+}
