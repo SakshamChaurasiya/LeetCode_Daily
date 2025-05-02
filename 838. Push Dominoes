@@ -1,0 +1,52 @@
+class Solution {
+    public String pushDominoes(String dominoes) {
+        char[] dom = dominoes.toCharArray();
+        int n = dom.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        
+        // Initialize left and right arrays with maximum distances
+        for (int i = 0; i < n; i++) {
+            left[i] = Integer.MAX_VALUE;
+            right[i] = Integer.MAX_VALUE;
+        }
+        
+        // Fill right array: distance from the nearest 'R' to the left
+        int nearestR = -1;
+        for (int i = 0; i < n; i++) {
+            if (dom[i] == 'R') {
+                nearestR = i;
+            } else if (dom[i] == 'L') {
+                nearestR = -1;
+            } else if (nearestR != -1) {
+                right[i] = i - nearestR;
+            }
+        }
+        
+        // Fill left array: distance from the nearest 'L' to the right
+        int nearestL = -1;
+        for (int i = n - 1; i >= 0; i--) {
+            if (dom[i] == 'L') {
+                nearestL = i;
+            } else if (dom[i] == 'R') {
+                nearestL = -1;
+            } else if (nearestL != -1) {
+                left[i] = nearestL - i;
+            }
+        }
+        
+        // Determine the final state based on left and right distances
+        for (int i = 0; i < n; i++) {
+            if (dom[i] == '.') {
+                if (left[i] < right[i]) {
+                    dom[i] = 'L';
+                } else if (right[i] < left[i]) {
+                    dom[i] = 'R';
+                }
+                // else remains '.'
+            }
+        }
+        
+        return new String(dom);
+    }
+}
