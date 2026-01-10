@@ -1,0 +1,85 @@
+//Using inbuilt functions of Java
+class Solution {
+    public String reverseWords(String s) {
+       String trim = s.trim();
+       String[] arr = trim.split("\\s+"); 
+       int i=0,j=arr.length-1;
+       while(i<j){
+           String temp = arr[i];
+           arr[i]=arr[j];
+           arr[j]=temp;
+           i++;
+           j--;
+       }
+       return String.join(" ",arr);
+    }
+}
+
+//Using StringBuilder
+class Solution {
+    public String reverseWords(String s) {
+        int l = 0,
+                r = s.length() - 1;
+        //trim string 
+        while (l < s.length()) {
+            if (s.charAt(l) == ' ') {
+                l++;
+            } else {
+                break;
+            }
+        }
+
+        while (r >= 0) {
+            if (s.charAt(r) == ' ') {
+                r--;
+            } else {
+                break;
+            }
+        }
+        //creating stringbuilder and removing middle spaces
+        StringBuilder sb = new StringBuilder();
+        while (l <= r) {
+            if (s.charAt(l) != ' ') {
+                sb.append(s.charAt(l));
+                l++;
+            } else if (s.charAt(l) == ' ') {
+                if (sb.charAt(sb.length() - 1) != ' ') {
+                    sb.append(' ');
+                    l++;
+                } else {
+                    l++;
+                }
+            }
+        }
+
+        //reverse string
+        int i=0,
+        j=sb.length()-1;
+        while(i<j){
+            char temp = sb.charAt(i);
+            sb.setCharAt(i,sb.charAt(j));
+            sb.setCharAt(j,temp);
+            i++;
+            j--;
+        }
+
+        //word by word reverse
+        int start = 0,end=0;
+        while(start<sb.length()){
+             while(end<sb.length() && sb.charAt(end)!=' '){
+                end++;
+             }
+             int p1=start,p2=end-1;
+             while(p1<p2){
+                char temp = sb.charAt(p1);
+                sb.setCharAt(p1,sb.charAt(p2));
+                sb.setCharAt(p2,temp);
+                p1++;
+                p2--;
+             }
+             start = end+1;
+             end=start;
+        }
+        return sb.toString();
+    }
+}
