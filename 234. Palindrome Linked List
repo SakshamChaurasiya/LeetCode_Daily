@@ -8,6 +8,7 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+//Extra space 
 class Solution {
     public boolean isPalindrome(ListNode head) {
         List<Integer> a = new ArrayList<>();
@@ -30,3 +31,37 @@ class Solution {
         return true;
     }
 }
+
+//Optimized(slow/fast pointer)
+class Solution {
+    public ListNode reverseLL(ListNode curr) {
+        ListNode prev = null;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    public boolean isPalindrome(ListNode head) {
+        ListNode slow = head,
+                fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode p1 = head;
+        ListNode p2 = reverseLL(slow);
+        while (p1 != null && p2 != null) {
+            if (p1.val != p2.val) {
+                return false;
+            }
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        return true;
+    }
+}
+
