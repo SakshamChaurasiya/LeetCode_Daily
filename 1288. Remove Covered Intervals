@@ -1,0 +1,50 @@
+//Brute Force  T: O(n^2) S: O(n)
+class Solution {
+    public int removeCoveredIntervals(int[][] intervals) {
+        int count = 0;
+        for (int i = 0; i < intervals.length; i++) {
+            int c = intervals[i][0],
+                    d = intervals[i][1];
+            boolean isCovered = false;
+            for (int j = 0; j < intervals.length; j++) {
+                int a = intervals[j][0],
+                        b = intervals[j][1];
+
+                if ((i != j) && c >= a && d <= b) {
+                    isCovered = true;
+                    break;
+                }
+
+            }
+            if (!isCovered) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+//Optimized T: O(n.logn) S: O(sorting depends on programming language)
+class Solution {
+    public int removeCoveredIntervals(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> {
+            int val = Integer.compare(a[0], b[0]);
+            return val==0?Integer.compare(b[1],a[1]):val;
+    });
+
+        int i = 1;
+        int count = 1;
+        int maxEnd = intervals[0][1];
+
+        while (i < intervals.length) {
+            int currEnd = intervals[i][1];
+            if (currEnd > maxEnd) {
+                count++; 
+                maxEnd = Math.max(maxEnd, currEnd);
+            }
+             
+            i++;
+        }
+        return count;
+    }
+}
