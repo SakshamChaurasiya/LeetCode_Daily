@@ -1,0 +1,65 @@
+//Brute Force T: O(1)  S: O(1)
+class MyCalendarTwo {
+    //bookings
+    //overlapBookings --> what is overlap between two meetings
+    List<int[]> bookings;
+    List<int[]> overlapBookings;
+
+    public MyCalendarTwo() {
+        bookings = new ArrayList<int[]>();
+        overlapBookings = new ArrayList<int[]>();
+
+    }
+
+    public boolean overlap(int i1[], int s2, int e2) {
+        int s1 = i1[0],
+                e1 = i1[1];
+        return e1 >= s2 && e2 >= s1;
+    }
+
+    public boolean book(int startTime, int endTime) {
+        //booking.size == 0 ... start,end-1 add
+        //return true
+        //
+        if (bookings.size() == 0) {
+            bookings.add(new int[] {
+                    startTime,
+                    endTime - 1
+            });
+            return true;
+        }
+        //start,end-1
+        //is there any intersection of these with overlapBookings meetings
+        for (int i = 0; i < overlapBookings.size(); i++) {
+            if (overlap(overlapBookings.get(i), startTime, endTime - 1)) {
+                return false;
+            }
+        }
+        //if yes, this is a triple booking return false
+        //
+        //start,end-1 
+        //in  bookings if any intersection add it in overlapBookings
+        for (int i = 0; i < bookings.size(); i++) {
+            if (overlap(bookings.get(i), startTime, endTime - 1)) {
+                overlapBookings.add(new int[] {
+                        Math.max(startTime, bookings.get(i)[0]),
+                        Math.min(endTime - 1, bookings.get(i)[1])
+                });
+            }
+        }
+
+        //add start,end-1 in bookings
+        bookings.add(new int[] {
+                startTime,
+                endTime - 1
+        });
+        return true;
+
+    }
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo obj = new MyCalendarTwo();
+ * boolean param_1 = obj.book(startTime,endTime);
+ */
