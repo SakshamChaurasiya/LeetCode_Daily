@@ -1,0 +1,24 @@
+class Solution {
+    //T: O(n.logn)  S: O(n)
+    public int minMeetingRooms(int[] start, int[] end) {
+        // code here
+        Map<Integer,Integer> map = new TreeMap<>();
+        
+        int len = start.length;
+        int bookings = 0,
+           max = 0;
+          
+        for(int i=0;i<len;i++){
+            map.put(start[i],map.getOrDefault(start[i],0)+1);
+            map.put(end[i],map.getOrDefault(end[i],0)-1);
+            
+        }
+        
+        for(Map.Entry<Integer,Integer> entry:map.entrySet()){
+            bookings = bookings+entry.getValue();
+            max = Math.max(bookings,max);
+        }
+        return max;
+        
+    }
+}
