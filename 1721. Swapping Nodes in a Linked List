@@ -1,0 +1,82 @@
+//Approach 1
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapNodes(ListNode head, int k) {
+        int jumps1 = k - 1,
+                len = 0;
+        ListNode curr = head;
+        while (curr != null) {
+            len++;
+            curr = curr.next;
+        }
+
+        ListNode n1 = head;
+        int counter = 0;
+
+        while (counter < jumps1) {
+            n1 = n1.next;
+            counter++;
+        }
+
+        ListNode n2 = head;
+        int jumps2 = len - k;
+                counter = 0;
+        while (counter < jumps2) {
+            n2 = n2.next;
+            counter++;
+        }
+
+        int temp = n1.val;
+        n1.val = n2.val;
+        n2.val = temp;
+
+        return head;
+    }
+}
+
+//Approach 2
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapNodes(ListNode head, int k) {
+        ListNode n1 = head,
+                n2 = head;
+
+        int counter = 0;
+        while (counter < k - 1) {
+            n1 = n1.next;
+            counter++;
+        }
+         
+         ListNode start = n1;
+
+         while(n1.next!=null){
+            n1=n1.next;
+            n2=n2.next;
+         }
+         
+         int temp = start.val;
+         start.val = n2.val;
+         n2.val = temp;
+
+         return head;
+         
+    }
+}
