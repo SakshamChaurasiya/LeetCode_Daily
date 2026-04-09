@@ -1,0 +1,64 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseEvenLengthGroups(ListNode head) {
+        //size= 1..2...3
+        //len =?
+        //loop...condition...curr!=null
+        //body...group.size==even....reverse
+        //group.size==odd....jump group
+        //no dummy node needed
+        int len = 0;
+        int probableGroupSize = 1;
+
+        ListNode curr = head;
+
+        //calculate length
+        while (curr != null) {
+            len++;
+            curr = curr.next;
+        }
+
+        ListNode p = null;
+        curr = head;
+        while (curr != null) {
+            int actualGroupSize = Math.min(probableGroupSize, len);
+
+            if (actualGroupSize % 2 == 0) {
+                ListNode prev = null;
+                ListNode temp1 = curr;
+                int counter = 0;
+
+                while (counter < actualGroupSize) {
+                    counter++;
+
+                    ListNode next = curr.next;
+                    curr.next = prev;
+                    prev = curr;
+                    curr = next;
+                }
+                p.next = prev;
+                temp1.next = curr;
+                p=temp1;
+            } else {
+                int counter = 0;
+                while (counter < actualGroupSize) {
+                    counter++;
+                    p = curr;
+                    curr = curr.next;
+                }
+            }
+            probableGroupSize += 1;
+            len = len - actualGroupSize;
+        }
+        return head;
+    }
+}
