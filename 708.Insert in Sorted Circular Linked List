@@ -1,0 +1,58 @@
+/*
+class Node {
+    int data;
+    Node next;
+
+    Node(int x) {
+        data = x;
+        next = null;
+    }
+} */
+
+class Solution {
+    public Node sortedInsert(Node head, int data) {
+        //head==null
+        if(head==null){
+            Node newNode = new Node(data);
+            newNode.next = newNode;
+            return newNode;
+        }
+        
+        //curr.next!=head
+        //value is it between n1 and n2
+        //if yes insert
+        //return newNode
+        // n1.val>n2.val
+        //  val>n1.val  insert value between n1 and n2
+        //  val<=n2.val insert value between n1 and n2
+        
+        Node curr = head;
+        
+        while(curr.next!=head){
+            Node next = curr.next;
+            
+            if(curr.data<=next.data){
+                if(data>=curr.data && data<=next.data){
+                    Node newNode = new Node(data);
+                    newNode.next = next;
+                    curr.next = newNode;
+                    return head;
+                }
+            }else{
+                if(data>=curr.data || data<=next.data ){
+                    Node newNode = new Node(data);
+                    newNode.next = next;
+                    curr.next = newNode;
+                    return head;
+                }
+            }
+            curr = curr.next;
+        }
+        
+        Node newNode = new Node(data);
+        newNode.next = curr.next;
+        curr.next = newNode;
+        return head;
+        
+    }
+}
