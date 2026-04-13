@@ -1,0 +1,105 @@
+//Brute Force
+//T : O(a+b+c)  S: O(a+b+c)
+class Solution {
+    public String longestDiverseString(int a, int b, int c) {
+        int c_a = 0;
+        int c_b = 0;
+        int c_c = 0;
+
+        StringBuilder res = new StringBuilder();
+
+        while (true) {
+            if (a > 0 && ((a >= b && a >= c && c_a < 2) ||
+                    (c_b == 2 && b >= a && a >= c) ||
+                    (c_c == 2 && c >= a && a >= b))) {
+                res.append('a');
+                c_a = c_a + 1;
+                c_b = 0;
+                c_c = 0;
+                a--;
+            } else if (b > 0 && ((b >= a && b >= c && c_b < 2) ||
+                    (c_a == 2 && a >= b && b >= c) ||
+                    (c_c == 2 && c >= b && b >= a))) {
+                res.append('b');
+                c_b = c_b + 1;
+                c_a = 0;
+                c_c = 0;
+                b--;
+            } else if (c > 0 && ((c >= a && c >= b && c_c < 2) ||
+                    (c_a == 2 && a >= c && c >= b) ||
+                    (c_b == 2 && b >= c && c >= a))) {
+                res.append('c');
+                c_c = c_c + 1;
+                c_a = 0;
+                c_b = 0;
+                c--;
+            } else {
+                break;
+            }
+        }
+        return res.toString();
+
+    }
+}
+
+//Optimized
+//T: O(a+b+c)  S: O(a+b+c)
+class CharacterCount {
+    int count;
+    char c;
+
+    public CharacterCount(int _count, char _c) {
+        count = _count;
+        c = _c;
+    }
+}
+
+class Solution {
+    public String longestDiverseString(int a, int b, int c) {
+        PriorityQueue<CharacterCount> maxHeap = new PriorityQueue<CharacterCount>((x, y) -> y.count - x.count);
+
+        if (a > 0) {
+            maxHeap.add(new CharacterCount(a, 'a'));
+        }
+        if (b > 0) {
+            maxHeap.add(new CharacterCount(b, 'b'));
+        }
+        if (c > 0) {
+            maxHeap.add(new CharacterCount(c, 'c'));
+        }
+
+        StringBuilder res = new StringBuilder();
+
+        while (!maxHeap.isEmpty()) {
+            CharacterCount max = maxHeap.poll();
+
+            int count = max.count;
+            char _c = max.c;
+
+            if (res.length() >= 2 && res.charAt(res.length() - 1) == _c  && res.charAt(res.length() - 2) == _c) {
+                if (maxHeap.isEmpty()) {
+                    break;
+                }
+
+                CharacterCount secondMax = maxHeap.poll();
+
+                int sCount = secondMax.count;
+                char sC = secondMax.c;
+
+                res.append(sC);
+                sCount--;
+                if (sCount > 0) {
+                    maxHeap.add(new CharacterCount(sCount, sC));
+                }
+
+            } else {
+                res.append(_c);
+                count--;
+            }
+            if (count > 0) {
+                    maxHeap.add(new CharacterCount(count, _c));
+                }
+        }
+        return res.toString();
+    }
+}
