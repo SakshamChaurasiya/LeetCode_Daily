@@ -1,0 +1,113 @@
+//Approach 1
+//T: O(O(M log M + M * n))  S: O(n)
+class Solution {
+    public int mostBooked(int n, int[][] meetings) {
+        Arrays.sort(meetings, (a, b) -> a[0] - b[0]);
+
+       long[] endTimesOfRooms = new long[n];
+
+        int[] counts = new int[n];
+
+        for (int i = 0; i < meetings.length; i++) {
+            int startTime = meetings[i][0];
+            int endTime = meetings[i][1];
+
+            int minEndTimeRoomIdx = 0;
+            boolean isRoomAllocated = false;
+
+            for (int room = 0; room < n; room++) {
+                if (startTime >= endTimesOfRooms[room]) {
+                   endTimesOfRooms[room] = endTime;
+                    counts[room] = counts[room] + 1;
+                    isRoomAllocated = true;
+                    break;
+                }
+
+                if (endTimesOfRooms[room] < endTimesOfRooms[minEndTimeRoomIdx]) {
+                    minEndTimeRoomIdx = room;
+                }
+            }
+            if(!isRoomAllocated){
+endTimesOfRooms[minEndTimeRoomIdx]=endTimesOfRooms[minEndTimeRoomIdx] + endTime-startTime;
+counts[minEndTimeRoomIdx]=counts[minEndTimeRoomIdx]+1;
+            }
+        }
+
+        int maxRoomCountsIdx = 0;
+
+        for(int i=0;i<n;i++){
+            if(counts[i]>counts[maxRoomCountsIdx]){
+                maxRoomCountsIdx = i;
+            }
+        }
+        return maxRoomCountsIdx;
+    }
+}
+
+//Approach 2
+//T: O(O(M log M + M * n))  S: O(n)
+class RoomEndTimes {
+    long endTime;
+    int idx;
+
+    public RoomEndTimes(long _endTime,int _idx){
+this.endTime = _endTime;
+this.idx = _idx;
+    }
+}
+
+    class Solution {
+    public int mostBooked(int n, int[][] meetings) {
+        Arrays.sort(meetings, (a, b) -> a[0] - b[0]);
+
+        // Min-heap of available room indices (always pick smallest index)
+        PriorityQueue<Integer> availableRooms = new PriorityQueue<>();
+        for (int i = 0; i < n; i++) {
+            availableRooms.add(i);
+        }
+
+        // Min-heap of occupied rooms, ordered by end time, then by room index
+        PriorityQueue<RoomEndTimes> occupiedRooms = new PriorityQueue<>(
+            (a, b) -> {
+                if (a.endTime == b.endTime) return a.idx - b.idx;
+                return Long.compare(a.endTime, b.endTime);
+            }
+        );
+
+        int[] counts = new int[n];
+
+        for (int[] meeting : meetings) {
+            int start = meeting[0];
+            int end = meeting[1];
+            int duration = end - start;
+
+            // Release all rooms that have become free by the current start time
+            while (!occupiedRooms.isEmpty() && occupiedRooms.peek().endTime <= start) {
+                RoomEndTimes free = occupiedRooms.poll();
+                availableRooms.add(free.idx);
+            }
+
+            if (!availableRooms.isEmpty()) {
+                // There is a free room – assign the meeting to the smallest index
+                int room = availableRooms.poll();
+                counts[room]++;
+                occupiedRooms.add(new RoomEndTimes(end, room));
+            } else {
+                // No free room – delay the meeting to the earliest available time
+                RoomEndTimes earliest = occupiedRooms.poll();
+                long newEndTime = earliest.endTime + duration;
+                counts[earliest.idx]++;
+                occupiedRooms.add(new RoomEndTimes(newEndTime, earliest.idx));
+            }
+        }
+
+        // Find the room with the maximum count (smallest index in case of tie)
+        int bestRoom = 0;
+        for (int i = 1; i < n; i++) {
+            if (counts[i] > counts[bestRoom]) {
+                bestRoom = i;
+            }
+        }
+        return bestRoom;
+    }
+}
